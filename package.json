@@ -28,6 +28,7 @@
     "@babel/core": "^7.20.12",
     "@babel/eslint-parser": "^7.19.1",
     "@babel/preset-env": "^7.20.2",
+    "@popperjs/core": "^2.11.8",
     "ajv": "^8.17.1",
     "babel-jest": "^29.3.1",
     "babel-loader": "^9.1.2",
@@ -52,9 +53,9 @@
     "webpack-dev-server": "^4.11.1"
   },
   "dependencies": {
+    "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "i18next": "^21.10.0",
-    "i18next-http-backend": "^1.0.0",
     "lodash": "^4.17.21",
     "npm-check-updates": "^16.6.2",
     "on-change": "^5.0.1",
