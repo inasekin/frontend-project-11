@@ -1,4 +1,7 @@
-import { schema, validateDuplicate } from './schema.js';
+import i18next from 'i18next';
+import { schema, validateDuplicate } from './yup/schema.js';
+import './locales/i18n.js';
+import './yup/yupLocale.js';
 
 export default () => {
   const form = document.querySelector('.rss-form');
@@ -6,38 +9,43 @@ export default () => {
   const feedback = document.querySelector('.feedback');
   const feeds = [];
 
-  form.addEventListener('submit', async (event) => {
-    event.preventDefault(); // останавливаем стандартную отправку формы
+  form.querySelector('label[for="url-input"]').textContent = i18next.t('label');
+  form.querySelector('button').textContent = i18next.t('button');
+  document.querySelector('h1').textContent = i18next.t('heading');
+  document.querySelector('.lead').textContent = i18next.t('lead');
+  document.querySelector('.text-muted').textContent = i18next.t('example');
+  document.querySelector('.full-article').textContent = i18next.t('read');
+  document.querySelector('.btn-secondary').textContent = i18next.t('close');
+  document.querySelector('.posts').textContent = i18next.t('feedsTitle');
+  document.querySelector('.feeds').textContent = i18next.t('postsTitle');
 
-    const url = input.value.trim(); // получаем введенный URL и убираем лишние пробелы
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const url = input.value.trim();
 
     try {
-      // валидация URL с использованием yup
       await schema.validate({ url });
 
-      // проверяем, есть ли дубликаты
       const duplicateError = validateDuplicate(url, feeds);
       if (duplicateError) {
-        throw new Error(duplicateError); // если URL уже есть, выбрасываем ошибку
+        throw new Error(duplicateError);
       }
 
-      // если валидация прошла успешно, добавляем URL в список фидов и сбрасываем форму
       feeds.push(url);
-      input.value = ''; // очищаем поле ввода
-      input.classList.remove('is-invalid'); // убираем класс ошибки
-      feedback.textContent = ''; // очищаем текст ошибки
-      input.focus(); // ставим фокус на поле ввода
+      input.value = '';
+      input.classList.remove('is-invalid');
+      feedback.textContent = '';
+      input.focus();
     } catch (err) {
-      // если произошла ошибка валидации, отображаем сообщение и подсвечиваем поле
-      input.classList.add('is-invalid'); // добавляем класс для выделения ошибки (Bootstrap)
-      feedback.textContent = err.message; // выводим сообщение об ошибке
+      input.classList.add('is-invalid');
+      feedback.textContent = err.message;
     }
   });
 
-  // обработчик ввода в поле: убираем ошибку при изменении текста в поле
+  // сброс ошибок при изменении ввода
   input.addEventListener('input', () => {
     if (input.value.trim() === '') {
-      // если поле пустое, убираем сообщение об ошибке и класс ошибки
       input.classList.remove('is-invalid');
       feedback.textContent = '';
     }
